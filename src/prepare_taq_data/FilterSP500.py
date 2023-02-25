@@ -17,6 +17,8 @@ class FilterSP500:
         file_path = self.baseDir + '/s&p500.xlsx'
         df = pd.read_excel(file_path, sheet_name='WRDS', usecols='H')
         tickers = set(df.iloc[:, 0].unique().flatten())
+        # with open("utils/s&p500_list.txt", "w") as output:
+        #     output.write(str(tickers))
         return tickers
 
     def filter_trades(self, tickers):
