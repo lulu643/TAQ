@@ -1,6 +1,7 @@
 import pandas as pd
+import numpy as np
 from collections import defaultdict
-import openpyxl
+
 
 import MyDirectories
 from FileManager import FileManager
@@ -10,6 +11,9 @@ class TAQAdjust:
     def __init__(self):
         self.baseDir = MyDirectories.getTAQDir()
         self.adjFactorPath = self.baseDir + '/s&p500.xlsx'
+        self._adjust_factor_price = self.read_adjust_factors('price')
+        self._adjust_factor_price.to_csv("temp.csv")
+        self._adjust_factor_vol = self.read_adjust_factors('vol')
 
     def read_adjust_factors(self, adj_type):
         """
@@ -24,7 +28,7 @@ class TAQAdjust:
 
         df = pd.read_excel(self.adjFactorPath, sheet_name='WRDS', usecols=cols)
         df = df.dropna(subset=['Names Date'])
-        table = pd.pivot_table(df, index='Names Date', columns='Ticker Symbol')
+        table = pd.pivot_table(df, index='Names Date', columns='Ticker Symbol', fill_value=np.nan)
         table.columns = table.columns.droplevel()
         table.index = pd.to_datetime(table.index.astype(int), format='%Y%m%d')
         return table
@@ -34,11 +38,10 @@ class TAQAdjust:
         last_factor = adjust_factor[ticker].iloc[-1]
         return value / contem_factor * last_factor
 
-    def adjust_trade_prices(self, ticker, startDateString="20070919", endDateString="20070921"):
+    def adjust_trade_price_and_vol(self, ticker, startDateString="20070919", endDateString="20070921"):
         # only return the adjusted price of the input ticker
-        prices=pd.DataFrame()
+        prices_and_vols=pd.DataFrame()
 
-        adjust_factor = self.read_adjust_factors('price')
 
         fm = FileManager(self.baseDir)
         tradeDates = fm.getTradeDates(startDateString, endDateString)
@@ -56,8 +59,7 @@ class TAQAdjust:
             start_of_day = datetime.combine(date, datetime.min.time())
     
             # Add the timedelta object to the start of the day datetime object
-            result = start_of_day + delta
-    
+            result = start_of_day + delta  
             return result
 
         for date_index in range(len(tradeDates)):
@@ -67,15 +69,19 @@ class TAQAdjust:
             for i in range(trade_file.getN()):
                 trade_price=trade_file.getPrice(i)
                 time=milliseconds_to_datetime(milliseconds=trade_file.getMillisFromMidn(i), date_str=date)
-                prices.loc[time,"original price"]=trade_price
-                adj_price = self.adjust_value(adjust_factor, time.date().strftime('%Y-%m-%d'), ticker, trade_price)
-                prices.loc[time,"adjusted price"]=adj_price
+                prices_and_vols.loc[time,"original price"]=trade_price
+                adj_price = self.adjust_value(self._adjust_factor_price, time.date().strftime('%Y-%m-%d'), ticker, trade_price)
+                prices_and_vols.loc[time,"adjusted price"]=adj_price
+                
+                trade_vol=trade_file.getSize(i)
+                prices_and_vols.loc[time,"original vol"]=trade_vol
+                adj_vol = self.adjust_value(self._adjust_factor_vol, time.date().strftime('%Y-%m-%d'), ticker, trade_vol)
+                prices_and_vols.loc[time,"adjusted vol"]=adj_vol
+                
 
-        print(prices)
-        print(prices.index[0])
 
 
 if __name__ == "__main__":
     taq_adjust = TAQAdjust()
-    taq_adjust.adjust_trade_prices("IBM")
+    taq_adjust.adjust_trade_price_and_vol("IBM")
 
