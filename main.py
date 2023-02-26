@@ -1,4 +1,4 @@
-from src.prepare_taq_data.FilterSP500 import FilterSP500
+from prepare_taq_data.FilterSP500 import FilterSP500
 
 if __name__ == "__main__":
     pass

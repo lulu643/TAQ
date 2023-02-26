@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from taq.src import MyDirectories
+import MyDirectories
 
 
 class FilterSP500:

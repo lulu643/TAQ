@@ -3,7 +3,7 @@ import gzip
 import struct
 
 from taq.src import MyDirectories
-from taq.src.BinReader import BinReader
+from BinReader import BinReader
 
 
 class Test(unittest.TestCase):

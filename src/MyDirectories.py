@@ -1,9 +1,17 @@
 class MyDirectories(object):
-    Sihan = "/Users/sihanliu"
-    TempDir = Sihan + "Desktop/AlgoTradingCourse/taq"
-    UnitTests = TempDir + "/unit_tests"
+    # Sihan = "/Users/sihanliu"
+    # TempDir = Sihan + "Desktop/AlgoTradingCourse/taq"
+    # UnitTests = TempDir + "/unit_tests"
 
-    TAQ = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data"
+    # TAQ = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data"
+
+    # BinRTTradesDir = TAQ + "/trades"
+    # BinRQQuotesDir = TAQ + "/quotes"
+    Ruihan = "/Users/apple"
+    TempDir = Ruihan + "/taq"
+    UnitTests = TempDir + "/src"
+
+    TAQ = "/Users/apple/taq/data"
 
     BinRTTradesDir = TAQ + "/trades"
     BinRQQuotesDir = TAQ + "/quotes"

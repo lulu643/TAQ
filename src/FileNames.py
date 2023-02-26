@@ -1,7 +1,7 @@
 import glob
 from collections import deque
 
-from taq.src import MyDirectories
+import MyDirectories
 
 
 class FileNames(object):

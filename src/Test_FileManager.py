@@ -1,7 +1,7 @@
 import unittest
 
-from taq.src import MyDirectories
-from taq.src.FileManager import FileManager
+import MyDirectories
+from FileManager import FileManager
 
 
 # Version 1802181651 
@@ -72,6 +72,11 @@ class Test_FileManager(unittest.TestCase):
             ibmTrades20070919.getPrice( 36912 ),
             decimalPlacesForFloatPriceComparison
         )
+        print(type(ibmTrades20070919.getMillisFromMidn(36912)))
+        print(ibmTrades20070919.getMillisFromMidn(36912))
+        print(type(ibmTrades20070919.getSecsFromEpocToMidn()))
+        print(ibmTrades20070919.getSecsFromEpocToMidn())
+
 
 if __name__ == "__main__":
     unittest.main()

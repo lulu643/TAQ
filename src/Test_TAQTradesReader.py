@@ -1,6 +1,6 @@
 import unittest
 
-from taq.src import MyDirectories, TAQTradesReader
+import MyDirectories, TAQTradesReader
 
 
 class Test_TAQTradesReader(unittest.TestCase):
