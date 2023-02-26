@@ -2,8 +2,8 @@ import unittest
 import gzip
 import struct
 
-from taq.src import MyDirectories
-from taq.src.BinReader import BinReader
+from src import MyDirectories
+from src.BinReader import BinReader
 
 
 class Test(unittest.TestCase):

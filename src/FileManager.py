@@ -1,8 +1,8 @@
 import os
 from os import access, R_OK
 
-from taq.src.TAQQuotesReader import TAQQuotesReader
-from taq.src.TAQTradesReader import TAQTradesReader
+from src.TAQQuotesReader import TAQQuotesReader
+from src.TAQTradesReader import TAQTradesReader
 
 
 # Version 1802181651 - See Test_FileManager

@@ -1,7 +1,7 @@
 import unittest
 
-from taq.src import MyDirectories
-from taq.src.FileManager import FileManager
+from src import MyDirectories
+from src.FileManager import FileManager
 
 
 # Version 1802181651 

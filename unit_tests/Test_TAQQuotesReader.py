@@ -1,6 +1,6 @@
 import unittest
 
-from taq.src import MyDirectories, TAQQuotesReader
+from src import MyDirectories, TAQQuotesReader
 
 
 class Test_TAQQuotesReader(unittest.TestCase):

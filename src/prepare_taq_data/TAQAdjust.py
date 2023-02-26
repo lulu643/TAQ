@@ -1,8 +1,9 @@
 import pandas as pd
+import numpy as np
 from collections import defaultdict
 
-from taq.src import MyDirectories
-from taq.src.FileManager import FileManager
+from src import MyDirectories
+from src.FileManager import FileManager
 
 
 class TAQAdjust:
@@ -23,7 +24,7 @@ class TAQAdjust:
 
         df = pd.read_excel(self.adjFactorPath, sheet_name='WRDS', usecols=cols)
         df = df.dropna(subset=['Names Date'])
-        table = pd.pivot_table(df, index='Names Date', columns='Ticker Symbol')
+        table = pd.pivot_table(df, index='Names Date', columns='Ticker Symbol', fill_value=np.nan)
         table.columns = table.columns.droplevel()
         table.index = pd.to_datetime(table.index.astype(int), format='%Y%m%d')
         return table
