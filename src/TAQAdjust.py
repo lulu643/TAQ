@@ -158,6 +158,5 @@ class TAQAdjust:
 
 if __name__ == "__main__":
     taq_adjust = TAQAdjust()
-    taq_adjust.adjust_quote_price_and_vol("IBM")
 
 
