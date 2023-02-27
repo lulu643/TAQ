@@ -72,10 +72,13 @@ class Test_FileManager(unittest.TestCase):
             ibmTrades20070919.getPrice( 36912 ),
             decimalPlacesForFloatPriceComparison
         )
-        print(type(ibmTrades20070919.getMillisFromMidn(36912)))
-        print(ibmTrades20070919.getMillisFromMidn(36912))
-        print(type(ibmTrades20070919.getSecsFromEpocToMidn()))
-        print(ibmTrades20070919.getSecsFromEpocToMidn())
+        for i in range(0,20):
+            print(ibmTrades20070919.getMillisFromMidn(i))
+            print(ibmTrades20070919.getPrice(i))
+        print()
+        print()
+        for i in range(0,20):
+            print(ibmTrades20070919.getTimestamp(i))
 
 
 if __name__ == "__main__":
