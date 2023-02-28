@@ -1,2 +1,6 @@
 **/__pycache/
 **/.DS_Store
+/output/AYE_20070619-20070921_quotes.csv
+/output/AYE_20070619-20070921_trades.csv
+/output/GFR_20070619-20070921_trades.csv
+/output/GFR_20070619-20070921_quotes.csv
