@@ -8,12 +8,14 @@ class FilterSP500:
         self.baseDir = MyDirectories.getTAQDir()
         self.tradesDir = MyDirectories.getTradesDir()
         self.quotesDir = MyDirectories.getQuotesDir()
+        # self.baseDir = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data/"
+        # self.tradesDir = "/Users/sihanliu/Desktop/full_datasets/full_unzipped_raw/trades"
+        # self.quotesDir = "/Users/sihanliu/Desktop/full_datasets/full_unzipped_raw/quotes"
 
     def get_SP500_tickers(self):
         """
         Get all S&P500 tickers from the Excel given
         """
-        # TODO: 不确定这个要不要根据每一天的时间来生成list
         file_path = self.baseDir + '/s&p500.xlsx'
         df = pd.read_excel(file_path, sheet_name='WRDS', usecols='H')
         tickers = set(df.iloc[:, 0].unique().flatten())
@@ -45,6 +47,11 @@ class FilterSP500:
                     os.remove(os.path.join(root, filename))
         return removed
 
+    def save_removed_ticker_lst(self, lst, filename):
+        with open(filename, 'w') as f:
+            for line in lst:
+                f.write(f"{line}\n")
+
     def filter(self):
         """
         Get S&P500 tickers and filter out the ones not in the list
@@ -53,5 +60,6 @@ class FilterSP500:
         removed_trades = self.filter_trades(tickers)
         removed_quotes = self.filter_quotes(tickers)
 
-        print('Removed trades:', removed_trades)
-        print('Removed quotes:', removed_quotes)
+        # save the removed tickers list to txt files
+        self.save_removed_ticker_lst(removed_trades, 'removed_trades.txt')
+        self.save_removed_ticker_lst(removed_quotes, 'removed_quotes.txt')
