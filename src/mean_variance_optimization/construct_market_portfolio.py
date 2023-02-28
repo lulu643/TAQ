@@ -1,84 +1,62 @@
-from cvxopt import matrix
-from cvxopt.blas import dot
-from cvxopt.solvers import qp, options
-import numpy as np
 import pandas as pd
 
-from math import sqrt
+from src import MyDirectories
 
 
 class ConstructMarketPortfolio:
     def __init__(self):
-        self.ExcelPath = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data/s&p500.xlsx"
-        self.m = np.nan  # to store the estimation of mean
-        self.c = np.nan  # to store the estimation of covariance matrix
-        self.n = 0  # number of tickers I'm working on
+        self.baseDir = MyDirectories.getTAQDir()
+        self.ExcelPath = self.baseDir + '/s&p500.xlsx'
 
-    def get_returns(self):
+    def get_the_weights(self, date):
         """
-        From the S&P500 Excel file, extract daily return for all dates all assets
+        Compute the weights of each asseet in market portfolio on specific date
+        using the formula:
+        w_i = market capitalization of asset i / total market capitalization
         """
         df = pd.read_excel(self.ExcelPath, sheet_name='WRDS')
-        df = df[["Names Date", "Ticker Symbol", "Returns"]]
-        df = df.dropna(subset=['Names Date'])
-        # Most of the values in this column is of type "float", but some have value 0, 'B', or 'C'; drop 'B', 'C'
-        df = df[df["Returns"].apply(lambda x: isinstance(x, (float, int)))]
-        table = pd.pivot_table(df, index='Names Date', columns='Ticker Symbol', fill_value=np.nan)
-        table.columns = table.columns.droplevel()
-        table.index = pd.to_datetime(table.index.astype(int), format='%Y%m%d')
-        return table
+        # select the columns to use
+        df = df [["Names Date",
+                  "Ticker Symbol",
+                  "Price or Bid/Ask Average",
+                  "Shares Outstanding"]]
+        # drop nan and none
+        df = df.dropna(subset=df.columns)
+        # select the date we are interested in
+        df["Names Date"] = pd.to_datetime(df["Names Date"].astype(int), format='%Y%m%d')
+        df = df[df['Names Date'] == pd.Timestamp(date)]
+        # compute market cap of each asset
+        df['market cap'] = df.apply(lambda x: x["Price or Bid/Ask Average"] * x["Shares Outstanding"], axis=1)
+        # get the weight of an asset in the market portfolio
+        sum_cap = df['market cap'].sum()
+        df['weight'] = df['market cap'] / sum_cap
+        # clean and organize the dataframe
+        # Issue1: ['STZ', 'CBS', 'MKC', 'LEN', 'TAP'] have duplicate rows with diff prices and shares outstanding
+        # deal with it by naming the duplicates as xxx, xxx_duplicate
+        mask = df['Ticker Symbol'].duplicated(keep='first')
+        df.loc[mask, 'Ticker Symbol'] = df.loc[mask, 'Ticker Symbol'] + '_duplicate'
+        # set tickers as index
+        df = df.set_index('Ticker Symbol')
+        df.columns = ['Date', 'Price', 'SharesOutstanding', 'MarketCap', 'Weight']
+        return df
 
-    def find_mean_covariance(self, ret_df, date):
-        """
-        Find the mean and covariance estimation of all assets for a given date
-        date format example: '2007-06-20'
-        """
-        row = ret_df.loc[date]
-        row = row.dropna()
-        tickers = row.index.tolist()
-        self.n = len(tickers)
-        d = np.array(row).reshape(1, -1)
-        self.m = np.mean(d, axis=0)
-        self.c = np.cov(d.T)
-        print(self.m)
-        print(self.c)  # TODO: cannot get a valid covariance matrix because of data shape
-        return self.m, self.c
-
-    def mean_variance_optimization(self):
-        n = self.n
-        S = self.c
-        pbar = self.m
-
-        G = matrix(0.0, (n, n))  # TODO: whether to change this part depends on inequality constraint
-        G[::n + 1] = -1.0
-        h = matrix(0.0, (n, 1))
-        A = matrix(1.0, (1, n))
-        b = matrix(1.0)
-
-        N = 100
-        mus = [10 ** (5.0 * t / N - 1.0) for t in range(N)]
-        options['show_progress'] = False
-        xs = [qp(mu * S, -pbar, G, h, A, b)['x'] for mu in mus]
-        returns = [dot(pbar, x) for x in xs]
-        risks = [sqrt(dot(x, S * x)) for x in xs]
-
-        try:
-            import pylab
-        except ImportError:
-            pass
-        else:
-            pylab.figure(1, facecolor='w')
-            pylab.plot(risks, returns)
-            pylab.xlabel('standard deviation')
-            pylab.ylabel('expected return')
-            pylab.axis([0, 0.2, 0, 0.15])
-            pylab.title('Risk-return trade-off curve')
-            pylab.yticks([0.00, 0.05, 0.10, 0.15])
-            pylab.title('Optimal allocations')
-            pylab.show()
+    def compute_turnover(self, date1='2007-06-20', date2='2007-09-20'):
+        # get the market cap weight of the assets in date1 and date2
+        weights1 = self.get_the_weights(date1)['Weight']
+        weights2 = self.get_the_weights(date2)['Weight']
+        # concatenate the two weights series and fill na as 0 weight
+        weights = pd.concat([weights1, weights2], axis=1)
+        weights = weights.fillna(0)
+        # Calculate the difference in weights between the two periods
+        weight_diff = weights.diff(axis=1)
+        # Drop the first column of weight_diff (which contains NaN values)
+        weight_diff.dropna(axis=1, inplace=True)
+        # Calculate the turnover ratio
+        turnover_ratio = weight_diff.abs().sum().sum() / 2.0
+        print("Portfolio Turnover Ratio: {:.2f}".format(turnover_ratio))
+        return turnover_ratio
 
 
 if __name__ == "__main__":
     obj = ConstructMarketPortfolio()
-    returns = obj.get_returns()
-    obj.find_mean_covariance(returns, '2007-09-20')
+    obj.compute_turnover()
