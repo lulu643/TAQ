@@ -8,16 +8,14 @@ class FilterSP500:
         self.baseDir = MyDirectories.getTAQDir()
         self.tradesDir = MyDirectories.getTradesDir()
         self.quotesDir = MyDirectories.getQuotesDir()
-        # self.baseDir = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data/"
-        # self.tradesDir = "/Users/sihanliu/Desktop/full_datasets/full_unzipped_raw/trades"
-        # self.quotesDir = "/Users/sihanliu/Desktop/full_datasets/full_unzipped_raw/quotes"
 
     def get_SP500_tickers(self):
         """
         Get all S&P500 tickers from the Excel given
         """
         file_path = self.baseDir + '/s&p500.xlsx'
-        df = pd.read_excel(file_path, sheet_name='WRDS', usecols='H')
+        df = pd.read_excel(file_path, sheet_name='WRDS')
+        df = df[['Ticker Symbol']]
         tickers = set(df.iloc[:, 0].unique().flatten())
         # with open("utils/s&p500_list.txt", "w") as output:
         #     output.write(str(tickers))
@@ -63,3 +61,9 @@ class FilterSP500:
         # save the removed tickers list to txt files
         self.save_removed_ticker_lst(removed_trades, 'removed_trades.txt')
         self.save_removed_ticker_lst(removed_quotes, 'removed_quotes.txt')
+
+
+if __name__ == "__main__":
+    obj = FilterSP500()
+    tickers = obj.get_SP500_tickers()
+    print(tickers)

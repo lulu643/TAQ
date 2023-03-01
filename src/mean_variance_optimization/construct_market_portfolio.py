@@ -53,7 +53,7 @@ class ConstructMarketPortfolio:
         weight_diff.dropna(axis=1, inplace=True)
         # Calculate the turnover ratio
         turnover_ratio = weight_diff.abs().sum().sum() / 2.0
-        print("Portfolio Turnover Ratio: {:.2f}".format(turnover_ratio))
+        # print("Portfolio Turnover Ratio: {:.2f}".format(turnover_ratio))
         return turnover_ratio
 
 
