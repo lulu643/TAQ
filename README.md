@@ -1,5 +1,11 @@
 # TAQ Project
 
+**Team members**:  
+Sihan Qi  sq543  
+Sihan Liu sl6964  
+Ruihan Zhuang rz1391  
+
+
 ## Installation
 You can create a new Python environment and install the required packages using the following command:  
 

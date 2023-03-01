@@ -1,6 +1,6 @@
 class MyDirectories(object):
     Sihan = "/Users/sihanliu"
-    TempDir = Sihan + "Desktop/AlgoTradingCourse/taq"
+    TempDir = Sihan + "/Desktop/AlgoTradingCourse/taq"
     UnitTests = TempDir + "/unit_tests"
 
     TAQ = "/Users/sihanliu/Desktop/AlgoTradingCourse/taq/data"

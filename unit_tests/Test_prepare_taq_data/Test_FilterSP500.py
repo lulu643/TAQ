@@ -16,6 +16,5 @@ class Test_FilterSP500(unittest.TestCase):
         self.assertTrue(all(ele not in tickers for ele in ['RBA', 'KVT', 'CIA']))
 
 
-
 if __name__ == "__main__":
     unittest.main()
