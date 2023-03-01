@@ -16,7 +16,7 @@ src
   -- analyze_autocorrelation
   -- mean_variance_optimization
 ```
-The prepare_taq_data, compute_summary_stats, analyze_autocorrelation, and mean_variance_optimization folders contain code for Question1, 2, 3, 4, respectively. 
+These folders contain code for Question1, 2, 3, 4, respectively. 
 
 All **unit test** files are in _unit_test_ folder. The _unit_test_ folder has a same structure as the _src_ folder. The unit tests are stored in the corresponding folder.
 

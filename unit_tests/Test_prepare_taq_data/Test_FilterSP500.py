@@ -15,8 +15,6 @@ class Test_FilterSP500(unittest.TestCase):
         self.assertTrue(all(ele in tickers for ele in ['AMZN', 'MSFT', 'IBM']))
         self.assertTrue(all(ele not in tickers for ele in ['RBA', 'KVT', 'CIA']))
 
-        # Create some empty files
-        # TODO: test the delete function
 
 
 if __name__ == "__main__":
