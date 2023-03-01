@@ -94,7 +94,6 @@ class TAQAdjust:
         prices_and_vols = pd.DataFrame(index=range(num_rows),
                                        columns=["date", "milisecond from midnight", "original price", "adjusted price",
                                                 "original vol", "adjusted vol"])
-        print(prices_and_vols)
         from datetime import datetime
 
         sum = 0
@@ -133,14 +132,12 @@ class TAQAdjust:
         prices_and_vols = pd.DataFrame(index=range(num_rows),
                                        columns=["date", "milisecond from midnight", "adjusted ask price",
                                                 "adjusted ask vol", "adjusted bid price", "adjusted bid vol"])
-        print(prices_and_vols)
         from datetime import datetime
 
         sum = 0
         for date in tradeDates:
             trade_file = fm.getQuotesFile(date, ticker)
             for i in range(trade_file.getN()):
-                print(sum)
                 ask_price = trade_file.getAskPrice(i)
                 bid_price = trade_file.getBidPrice(i)
                 ask_size = trade_file.getAskSize(i)
@@ -170,6 +167,10 @@ class TAQAdjust:
 
 if __name__ == "__main__":
     taq_adjust = TAQAdjust()
-    taq_adjust.adjust_trade_price_and_vol("IBM")
+    # taq_adjust.adjust_trade_price_and_vol("AYE", startDateString="20070619", endDateString="20070921")
+    # taq_adjust.adjust_quote_price_and_vol("AYE", startDateString="20070619", endDateString="20070921")
+    # taq_adjust.adjust_trade_price_and_vol("GFR", startDateString="20070619", endDateString="20070921")
+    # taq_adjust.adjust_quote_price_and_vol("GFR", startDateString="20070619", endDateString="20070921")
+    # taq_adjust.adjust_trade_price_and_vol("NVDA", startDateString="20070619", endDateString="20070621")
 
 
